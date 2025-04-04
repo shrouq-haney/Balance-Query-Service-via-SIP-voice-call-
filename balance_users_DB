@@ -1,0 +1,18 @@
+ create database balance_users ;
+ \c balance_users
+create schema balance_users ;
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    msisdn VARCHAR(20) UNIQUE NOT NULL,
+    balance DECIMAL(10,2) NOT NULL
+);
+insert into users(msisdn, balance) values ('01151198500',50);
+insert into users(msisdn, balance) values ('01140360560',50.5555);
+
+insert into users(msisdn, balance) values ('+201288667593',0);
+
+ insert into users(msisdn, balance) values ('+201114547924',100.222222);
+ insert into users(msisdn, balance) values ('+201004652144',0.222222);
+
+ select * from users;
+
