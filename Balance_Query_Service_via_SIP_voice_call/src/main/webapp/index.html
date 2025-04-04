@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balance Query Service</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        input {
+            padding: 10px;
+            margin: 10px;
+            width: 250px;
+        }
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Balance Query Service</h2>
+
+    <input type="text" id="msisdn" placeholder="Enter MSISDN">
+    <input type="text" id="balance" placeholder="Enter Balance">
+    <br>
+
+    <button onclick="addUser()">Add User</button>
+    <button onclick="checkBalance()">Get Balance</button>
+    <button onclick="updateBalance()">Update Balance</button>
+    <button onclick="deleteUser()">Delete User</button>
+
+    <div id="result"></div>
+
+    <script>
+        const baseURL = "/balance"; // تأكد أن هذا المسار صحيح
+
+        // إضافة مستخدم جديد
+        function addUser() {
+            const msisdn = document.getElementById("msisdn").value;
+            const balance = document.getElementById("balance").value;
+
+            if (!msisdn || !balance) {
+                alert("Please enter both MSISDN and balance!");
+                return;
+            }
+
+            fetch(`${baseURL}/addUser`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ msisdn, balance })
+            })
+            .then(response => response.text())
+            .then(data => document.getElementById("result").innerText = data)
+            .catch(error => console.error("Error:", error));
+        }
+
+        // جلب الرصيد لمستخدم معين
+        function checkBalance() {
+            const msisdn = document.getElementById("msisdn").value;
+            if (!msisdn) {
+                alert("Please enter an MSISDN!");
+                return;
+            }
+
+            fetch(`${baseURL}/getBalance?msisdn=${msisdn}`)
+            .then(response => response.text())
+            .then(data => document.getElementById("result").innerText = "Balance: " + data)
+            .catch(error => console.error("Error:", error));
+        }
+
+        // تحديث الرصيد لمستخدم معين
+        function updateBalance() {
+            const msisdn = document.getElementById("msisdn").value;
+            const balance = document.getElementById("balance").value;
+
+            if (!msisdn || !balance) {
+                alert("Please enter both MSISDN and balance!");
+                return;
+            }
+
+            fetch(`${baseURL}/updateBalance`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ msisdn, balance })
+            })
+            .then(response => response.text())
+            .then(data => document.getElementById("result").innerText = data)
+            .catch(error => console.error("Error:", error));
+        }
+
+        // حذف مستخدم معين
+        function deleteUser() {
+            const msisdn = document.getElementById("msisdn").value;
+            if (!msisdn) {
+                alert("Please enter an MSISDN!");
+                return;
+            }
+
+            fetch(`${baseURL}/deleteUser?msisdn=${msisdn}`, { method: "DELETE" })
+            .then(response => response.text())
+            .then(data => document.getElementById("result").innerText = data)
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+
+</body>
+</html>
